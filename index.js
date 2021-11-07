@@ -17,6 +17,7 @@ async function run() {
     await client.connect();
     const database = client.db('doctors_protal');
     const appointmentCollection = database.collection('appointments');
+    const usersCollection = database.collection('users');
 
     app.get('/appointments', async (req, res) => {
       const email = req.query.email;
@@ -25,13 +26,31 @@ async function run() {
       const cursor = appointmentCollection.find(query);
       const appointments = await cursor.toArray();
       res.json(appointments)
-    })
+    });
 
     app.post('/appointments', async (req, res) => {
       const appointment = req.body;
       const result = await appointmentCollection.insertOne(appointment)
       res.json(result);
-    })
+    });
+
+    app.post('/users', async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+      res.json(result);
+    });
+
+    // upsert user
+    app.put('/users', async (req, res) => {
+      const user = req.body;
+      const filter = { email: user.email };
+      const options = { upsert: true };
+      const updateDoc = { $set: user };
+      const result = await usersCollection.updateOne(filter, updateDoc, options);
+      res.json(result);
+      console.log(result);
+    });
+
 
   } finally {
     // await client.close();
