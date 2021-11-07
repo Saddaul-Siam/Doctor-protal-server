@@ -6,7 +6,7 @@ const { MongoClient } = require('mongodb');
 const admin = require("firebase-admin");
 const port = process.env.PORT || 5000
 
-const serviceAccount = require('./doctors-portal-24-firebase-admin.json');
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
