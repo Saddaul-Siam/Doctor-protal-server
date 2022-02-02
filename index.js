@@ -5,6 +5,7 @@ const admin = require("firebase-admin");
 const port = process.env.PORT || 5000;
 
 const serviceAccount = require("./doctors-portal-24-firebase-admin.json");
+const { app } = require("firebase-admin");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -84,7 +85,9 @@ async function run() {
   } catch (err) {
     console.log(err);
   }
-
+  app.get("/", async (req, res) => {
+    res.sand("server is runing");
+  });
   app.listen(port, () => {
     console.log(`listening at ${port}`);
   });
